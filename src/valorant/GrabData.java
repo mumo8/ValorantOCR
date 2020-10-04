@@ -45,12 +45,14 @@ public class GrabData {
 	
 	int thresholdMin = 180;
 	int thresholdMax = 255;
-	String ocrDictionary ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+	String ocrDictionary ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890:-";
 	String inputPicture = "";
 	String outputPicture = "";
 	String characterName = "NotTurntEnough";
 	String excelLocation = "C:\\Users\\wilki\\Desktop\\VData.xlsx";
+	String imgName = "new.jpg";
 	int[] crop = new int[4];
+	String[] characters = {"Phoenix", "Raze", "Reyna", "Breach", "Sage","Sova", "Viper", "Brimstone", "Cypher", "Killjoy", "Jett", "Omen"};
 	//Mat currentMat = new Mat();
 	   
 	
@@ -61,17 +63,78 @@ public class GrabData {
 	      system.click(835, 195);
 	      TimeUnit.MILLISECONDS.sleep(300);
 	      system.setCrop(331, 309, 1210, 557);
-	      String scoreboardData = system.processData(system.imageProcess())
+	      system.setImgName("scoreboard.jpg");
+	      String scoreboardData = system.processData(system.imageProcess());
 	     
 	      
 	      system.setCrop(1695, 184, 114, 70);
 	      system.setThresholdMin(115);
-	      String mapData = system.processData(system.imageProcess())
-	      system.processScoreBoard(scoreboardData,mapData);
-	      //system.click(1028, 190);
-	      //TimeUnit.MILLISECONDS.sleep(300);
-	      //system.setCrop(335, 500, 160, 435);
-	      //system.imageProcess();
+	      system.setImgName("mapData.jpg");
+	      String mapData = system.processData(system.imageProcess());
+	      
+	      
+
+	      system.setOcrDictionary("1234567890");
+	      
+	      //Getting the rounds won of the ally team
+	      system.setCrop(722, 94, 75, 60);
+	      system.setThresholdMin(115);
+	      system.setImgName("allyScore.jpg");
+	      String allyScore = system.processData(system.imageProcess());
+	      
+	      //Getting the score of the enemy team
+	      system.setCrop(1080, 104, 70, 50);
+	      system.setThresholdMin(106);
+	      system.setImgName("enemyScore.jpg");
+	      String enemyScore = system.processData(system.imageProcess());
+	      
+	      //Capturing if the game was a win or loss
+	      system.setOcrDictionary("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+	      system.setCrop(810, 97, 240, 60);
+	      system.setThresholdMin(150);
+	      system.setImgName("result.jpg");
+	      String result = system.processData(system.imageProcess());
+	      
+	      //Team Player Name Capture
+	      system.click(1028, 190);
+	      system.setOcrDictionary("ABCEGHIJKLMNIPRSTVXYZabceghijklmnoprstvxyz");
+	      TimeUnit.MILLISECONDS.sleep(1000);
+	      system.setCrop(250, 500, 160, 217);
+	      system.setThresholdMin(179);
+	      system.setImgName("teamChar.jpg");
+	      String teamPlayers = system.processData(system.imageProcess());
+	      
+	      //Enemy Player Name Capture
+	      system.click(1216, 190);
+	      TimeUnit.MILLISECONDS.sleep(1000);
+	      system.setCrop(990, 345, 330, 345);
+	      system.setThresholdMin(130);
+	      system.setImgName("enemyChar.jpg");
+	      String enemyPlayers = system.processData(system.imageProcess());
+	      
+	      system.setOcrDictionary("ATKDEFatkdef");
+	      system.click(645, 193);
+	      TimeUnit.MILLISECONDS.sleep(1000);
+	      system.setCrop(1380, 347, 50, 23);
+	      system.setThresholdMin(115);
+	      system.setImgName("side.jpg");
+	      String startSide = system.processData(system.imageProcess());
+	      
+	      system.setOcrDictionary("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+	      system.setCrop(151, 915, 100, 33);
+	      system.setThresholdMin(175);
+	      system.setImgName("currentPlayer.jpg");
+	      String currentPlayer = system.processData(system.imageProcess());
+	      
+	      system.setOcrDictionary("1234567890");
+	      system.setCrop(1345, 406, 270, 38);
+	      system.setThresholdMin(175);
+	      system.setImgName("roundWins.jpg");
+	      String roundWins = system.processData(system.imageProcess());
+	      
+	      
+	      system.processScoreBoard(scoreboardData,mapData, allyScore, enemyScore, result, teamPlayers, enemyPlayers, startSide, currentPlayer, roundWins);
+	      
 	   }
 	
 	   public Mat imageProcess() throws Exception
@@ -94,12 +157,12 @@ public class GrabData {
 		   Imgproc.resize(source, source, largen);
 		   Imgproc.cvtColor(source, destination, Imgproc.COLOR_RGB2GRAY);
 		   Imgproc.threshold(destination, destination, thresholdMin, thresholdMax,1);
-		   Imgproc.equalizeHist(destination, destination);
+		   //Imgproc.equalizeHist(destination, destination);
 		   
 		   //Mat invertcolormatrix = new Mat(destination.rows(),destination.cols(), destination.type(), new Scalar(255,255,255));
 		   //Core.subtract(invertcolormatrix, destination, destination);
 		   
-		   Imgcodecs.imwrite("C:\\Users\\wilki\\Desktop\\new.jpg", destination);
+		   Imgcodecs.imwrite("C:\\Users\\wilki\\Desktop\\vphoto\\"+ imgName, destination);
 		   //System.out.println("The image is successfully converted to Grayscale");
 		   return(destination);
 	   }
@@ -138,7 +201,7 @@ public class GrabData {
 	        
 	   }
 	   
-	   public void processScoreBoard(String scoreBoard, String mapInfo) throws FileNotFoundException, IOException
+	   public void processScoreBoard(String scoreBoard, String mapInfo, String ally, String enemy, String theResult, String teamChar, String enemyChar, String side,String player, String wins) throws FileNotFoundException, IOException
 	   {
 		   String yourScore = "";
 		   String theMap = "";
@@ -148,6 +211,7 @@ public class GrabData {
 		   yourScore = yourScore.trim();
 		   System.out.println(yourScore);
 		   splitScore = yourScore.split(" ");
+		   String splitMapInfo[] = mapInfo.split("\n");
 		   
 		   FileInputStream dataStorage = new FileInputStream(excelLocation);
 		   
@@ -156,17 +220,81 @@ public class GrabData {
 		   int lastRow = workSheet.getLastRowNum();
 		   Row row = workSheet.createRow(++lastRow); 
 		   
+		   ally = ally.trim();
+		   enemy = enemy.trim();
+		   
+		   int teamCellNum = 18;
+		   int enemCellNum = 22;
+		   for(int i = 0; i < 12; i++)
+		   {
+			  
+			   if(teamCellNum == 22)
+			   {
+				   
+			   }else if(teamChar.contains(characters[i])) 
+			   {				   				   
+					   row.createCell(teamCellNum).setCellValue(characters[i]);
+					   teamCellNum++;
+			   }
+			   
+			   if(enemCellNum ==  28)
+			   {
+				   
+			   }
+			   else  if(enemyChar.contains(characters[i])) 
+			   {
+				   	   row.createCell(enemCellNum).setCellValue(characters[i]);
+					   enemCellNum++;
+				   
+			   }
+			   
+		   }
+				   
+		   side = side.toLowerCase();
+		   
+		   if (side.contains("a")||side.contains("t")||side.contains("k"))
+		   {
+			   row.createCell(3).setCellValue("Attack");
+			   System.out.println("Wins: " + wins.substring(wins.indexOf(" ")));
+			   row.createCell(4).setCellValue(Integer.parseInt(wins.substring(0, wins.indexOf(" ")).trim()));
+			   row.createCell(5).setCellValue(Integer.parseInt(wins.substring(wins.indexOf(" ")).trim()));
+		   }
+		   else if (side.contains("d")||side.contains("e")||side.contains("f"))
+		   {
+			   row.createCell(3).setCellValue("Defend");
+			   row.createCell(5).setCellValue(Integer.parseInt(wins.substring(0, wins.indexOf(" ")).trim()));
+			   row.createCell(4).setCellValue(Integer.parseInt(wins.substring(wins.indexOf(" ")).trim()));
+		   }
+		   else
+		   {
+			   row.createCell(3).setCellValue("Read Error");
+			   row.createCell(4).setCellValue("Read Error");
+			   row.createCell(5).setCellValue("Read Error");
+		   }
+		   
+		   
+		   
+		   
 		   String time = "" + LocalTime.now();
 		   time = time.substring(0,5);
 		   
+		   int space = splitMapInfo[2].indexOf("-") + 1;
+		   splitMapInfo[2] = splitMapInfo[2].substring(space);
+		   
 		   //set excel values here
-		   row.createCell(10).setCellValue(time);
+		   row.createCell(0).setCellValue(theResult.substring(0,1).toUpperCase() + theResult.substring(1).toLowerCase());
+		   row.createCell(1).setCellValue(Integer.parseInt(ally.trim()));
+		   row.createCell(2).setCellValue(Integer.parseInt(enemy.trim()));
+		   row.createCell(6).setCellValue(splitMapInfo[2].substring(0,1) + splitMapInfo[2].substring(1).toLowerCase());
 		   row.createCell(9).setCellValue("" + java.time.LocalDate.now());
+		   row.createCell(10).setCellValue(time);
+		   row.createCell(11).setCellValue(splitMapInfo[3]);
 		   row.createCell(12).setCellValue(Integer.parseInt(splitScore[0]));
 		   row.createCell(13).setCellValue(Integer.parseInt(splitScore[4]));
 		   row.createCell(14).setCellValue(Integer.parseInt(splitScore[1]));
 		   row.createCell(15).setCellValue(Integer.parseInt(splitScore[2]));
 		   row.createCell(16).setCellValue(Integer.parseInt(splitScore[3]));
+		   row.createCell(17).setCellValue(player.substring(0,1).toUpperCase() + player.substring(1).toLowerCase());
 		   
 		   //close file
 		   dataStorage.close();
@@ -195,6 +323,11 @@ public class GrabData {
 		   thresholdMin = aThresholdMin;
 	   }
 	   
+	   public void setThresholdMax (int aThresholdMax)
+	   {
+		   thresholdMax = aThresholdMax;
+	   }
+	   
 	   public String getOcrDictionary()
 	   {
 		   return(ocrDictionary);
@@ -211,6 +344,10 @@ public class GrabData {
 		   crop[2] = xSize;
 		   crop[3] = ySize;
 		   
+	   }
+	   public void setImgName (String aName)
+	   {
+		   imgName = aName;
 	   }
 }
 
