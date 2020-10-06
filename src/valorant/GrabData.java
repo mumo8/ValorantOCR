@@ -1,20 +1,15 @@
 package valorant;
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.MatOfByte;
-//import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.core.Size;
-//import org.opencv.core.Scalar;
 import net.sourceforge.tess4j.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,23 +17,13 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.awt.AWTException;
-//import java.io.InputStream;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.InputEvent;
-import java.awt.image.DataBufferByte;
-
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import java.time.format.DateTimeFormatter;  
-import java.time.LocalDateTime;
 import java.time.LocalTime; 
 
 public class GrabData {
@@ -348,6 +333,12 @@ public class GrabData {
 	   public void setImgName (String aName)
 	   {
 		   imgName = aName;
+	   }
+	   
+	   public void setExcelLocation (String aLocation)
+	   {
+		   excelLocation = aLocation;
+		   
 	   }
 }
 
