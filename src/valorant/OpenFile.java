@@ -29,7 +29,7 @@ public class OpenFile {
 	private void initialize() {
 		fileVisual = new JDialog();
 		fileVisual.setBounds(100, 100, 655, 414);
-		fileVisual.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		fileVisual.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
 		
 		JFileChooser fileChooser = new JFileChooser();		
 		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));

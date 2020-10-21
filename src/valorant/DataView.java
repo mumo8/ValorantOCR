@@ -1,11 +1,21 @@
 package valorant;
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileFilter;
+import java.awt.event.ActionEvent;
 
 public class DataView {
 
@@ -38,7 +48,12 @@ public class DataView {
 	private JTextField rankChangeLive;
 	private JTextField rankLive;
 	private String[] windowData = new String[24];
-	
+	private JButton submit;
+	private JTextField fileLocation;
+	private DataView dataView;
+	private JButton collectData;
+	private JButton browse;
+	private JDialog fileVisual;
 
 	/**
 	 * Create the application.
@@ -46,44 +61,82 @@ public class DataView {
 	public DataView() {
 		initialize();
 	}
+	
+	public static void main(String[] args) throws Exception
+	{
+		DataView mainWindow = new DataView();
+		mainWindow.setFrameVisible();
+		
+		
+		//system.setExcelLocation(mainWindow.getFileLocation());
+		
+		
+		
+		
+		
+		/*
+	   
+	    
+	    
+	    system.processScoreBoard(scoreboardData,mapData, allyScore, enemyScore, result, teamPlayers, enemyPlayers, startSide, currentPlayer, roundWins);
+		*/
+	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		fileVisual = new JDialog();
+		fileVisual.setBounds(100, 100, 655, 414);
+		fileVisual.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
+		
+		JFileChooser fileChooser = new JFileChooser();		
+		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+		
+		FileNameExtensionFilter excelOnly =  new FileNameExtensionFilter("Excel Files Only","xlsx","csv","xls");
+		fileChooser.setFileFilter(excelOnly);
+		fileChooser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {				
+				File file = fileChooser.getSelectedFile();
+				fileLocation.setText(file.getPath()); 
+				fileVisual.setVisible(false);
+			}
+		});
+		fileVisual.getContentPane().add(fileChooser, BorderLayout.CENTER);
+		
 		frame = new JFrame();
-		frame.setBounds(100, 100, 380, 400);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setBounds(100, 100, 518, 475);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Ally Score");
 		lblNewLabel.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblNewLabel.setBounds(25, 11, 81, 20);
+		lblNewLabel.setBounds(64, 11, 81, 20);
 		frame.getContentPane().add(lblNewLabel);
 		
 		JLabel lblEnemyScore = new JLabel("Enemy Score");
 		lblEnemyScore.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblEnemyScore.setBounds(233, 11, 97, 20);
+		lblEnemyScore.setBounds(363, 11, 97, 20);
 		frame.getContentPane().add(lblEnemyScore);
 		
 		JLabel lblResult = new JLabel("Result");
 		lblResult.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblResult.setBounds(144, 11, 51, 20);
+		lblResult.setBounds(229, 11, 51, 20);
 		frame.getContentPane().add(lblResult);
 		
 		allyScoreLive = new JTextField();
-		allyScoreLive.setBounds(25, 42, 81, 20);
+		allyScoreLive.setBounds(53, 42, 81, 20);
 		frame.getContentPane().add(allyScoreLive);
 		allyScoreLive.setColumns(10);
 		
 		resultLive = new JTextField();
 		resultLive.setColumns(10);
-		resultLive.setBounds(126, 42, 81, 20);
+		resultLive.setBounds(214, 42, 81, 20);
 		frame.getContentPane().add(resultLive);
 		
 		enemScoreLive = new JTextField();
 		enemScoreLive.setColumns(10);
-		enemScoreLive.setBounds(243, 42, 81, 20);
+		enemScoreLive.setBounds(373, 42, 81, 20);
 		frame.getContentPane().add(enemScoreLive);
 		
 		JLabel lblAcs = new JLabel("ACS");
@@ -138,126 +191,169 @@ public class DataView {
 		
 		JLabel lblAllies = new JLabel("Allies");
 		lblAllies.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblAllies.setBounds(144, 73, 51, 20);
+		lblAllies.setBounds(149, 73, 51, 20);
 		frame.getContentPane().add(lblAllies);
 		
 		JLabel lblEnemies = new JLabel("Enemies");
 		lblEnemies.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblEnemies.setBounds(253, 73, 71, 20);
+		lblEnemies.setBounds(302, 73, 71, 20);
 		frame.getContentPane().add(lblEnemies);
 		
 		allyA = new JTextField();
 		allyA.setColumns(10);
-		allyA.setBounds(126, 99, 81, 20);
+		allyA.setBounds(131, 99, 81, 20);
 		frame.getContentPane().add(allyA);
 		
 		allyB = new JTextField();
 		allyB.setColumns(10);
-		allyB.setBounds(126, 125, 81, 20);
+		allyB.setBounds(131, 125, 81, 20);
 		frame.getContentPane().add(allyB);
 		
 		allyC = new JTextField();
 		allyC.setColumns(10);
-		allyC.setBounds(126, 154, 81, 20);
+		allyC.setBounds(131, 154, 81, 20);
 		frame.getContentPane().add(allyC);
 		
 		allyD = new JTextField();
 		allyD.setColumns(10);
-		allyD.setBounds(126, 181, 81, 20);
+		allyD.setBounds(131, 181, 81, 20);
 		frame.getContentPane().add(allyD);
 		
 		allyE = new JTextField();
 		allyE.setColumns(10);
-		allyE.setBounds(126, 208, 81, 20);
+		allyE.setBounds(131, 208, 81, 20);
 		frame.getContentPane().add(allyE);
 		
 		enemA = new JTextField();
 		enemA.setColumns(10);
-		enemA.setBounds(243, 99, 81, 20);
+		enemA.setBounds(292, 99, 81, 20);
 		frame.getContentPane().add(enemA);
 		
 		enemB = new JTextField();
 		enemB.setColumns(10);
-		enemB.setBounds(243, 125, 81, 20);
+		enemB.setBounds(292, 125, 81, 20);
 		frame.getContentPane().add(enemB);
 		
 		enemC = new JTextField();
 		enemC.setColumns(10);
-		enemC.setBounds(243, 154, 81, 20);
+		enemC.setBounds(292, 154, 81, 20);
 		frame.getContentPane().add(enemC);
 		
 		enemD = new JTextField();
 		enemD.setColumns(10);
-		enemD.setBounds(243, 181, 81, 20);
+		enemD.setBounds(292, 181, 81, 20);
 		frame.getContentPane().add(enemD);
 		
 		enemE = new JTextField();
 		enemE.setColumns(10);
-		enemE.setBounds(243, 208, 81, 20);
+		enemE.setBounds(292, 208, 81, 20);
 		frame.getContentPane().add(enemE);
 		
 		JLabel lblAtkWins = new JLabel("ATK Wins");
 		lblAtkWins.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblAtkWins.setBounds(25, 239, 81, 20);
+		lblAtkWins.setBounds(81, 236, 81, 20);
 		frame.getContentPane().add(lblAtkWins);
 		
 		JLabel lblDefWins = new JLabel("DEF Wins");
 		lblDefWins.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblDefWins.setBounds(126, 239, 81, 20);
+		lblDefWins.setBounds(217, 235, 81, 20);
 		frame.getContentPane().add(lblDefWins);
 		
 		JLabel lblDuration = new JLabel("Duration");
 		lblDuration.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblDuration.setBounds(243, 239, 81, 20);
+		lblDuration.setBounds(379, 240, 81, 20);
 		frame.getContentPane().add(lblDuration);
 		
 		attackWins = new JTextField();
 		attackWins.setColumns(10);
-		attackWins.setBounds(25, 262, 81, 20);
+		attackWins.setBounds(77, 258, 81, 20);
 		frame.getContentPane().add(attackWins);
 		
 		defendWins = new JTextField();
 		defendWins.setColumns(10);
-		defendWins.setBounds(126, 262, 81, 20);
+		defendWins.setBounds(216, 261, 81, 20);
 		frame.getContentPane().add(defendWins);
 		
 		gameLength = new JTextField();
 		gameLength.setColumns(10);
-		gameLength.setBounds(243, 262, 81, 20);
+		gameLength.setBounds(370, 265, 81, 20);
 		frame.getContentPane().add(gameLength);
 		
 		lblRank = new JLabel("Rank");
 		lblRank.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblRank.setBounds(25, 294, 81, 20);
+		lblRank.setBounds(78, 291, 81, 20);
 		frame.getContentPane().add(lblRank);
 		
 		lblRankChange = new JLabel("Rank Change");
 		lblRankChange.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblRankChange.setBounds(116, 294, 109, 20);
+		lblRankChange.setBounds(202, 293, 109, 20);
 		frame.getContentPane().add(lblRankChange);
 		
 		lblTime = new JLabel("Time");
 		lblTime.setFont(new Font("Rockwell", Font.PLAIN, 16));
-		lblTime.setBounds(243, 294, 81, 20);
+		lblTime.setBounds(374, 290, 81, 20);
 		frame.getContentPane().add(lblTime);
 		
 		time = new JTextField();
 		time.setColumns(10);
-		time.setBounds(243, 317, 81, 20);
+		time.setBounds(373, 315, 81, 20);
 		frame.getContentPane().add(time);
 		
 		rankChangeLive = new JTextField();
 		rankChangeLive.setColumns(10);
-		rankChangeLive.setBounds(126, 317, 81, 20);
+		rankChangeLive.setBounds(214, 317, 81, 20);
 		frame.getContentPane().add(rankChangeLive);
 		
 		rankLive = new JTextField();
 		rankLive.setColumns(10);
-		rankLive.setBounds(25, 317, 81, 20);
+		rankLive.setBounds(77, 316, 81, 20);
 		frame.getContentPane().add(rankLive);
+		
+		submit = new JButton("Submit");
+		submit.setBounds(253, 397, 207, 28);
+		frame.getContentPane().add(submit);
+		submit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent submitHit) {
+				GrabData processor = new GrabData();
+				processor.writeToExcel(getFieldData());				
+			}
+		});
+		
+		fileLocation = new JTextField();
+		fileLocation.setColumns(10);
+		fileLocation.setBounds(202, 355, 197, 20);
+		frame.getContentPane().add(fileLocation);
+		
+		JButton browse = new JButton("Browse");
+		browse.setBounds(409, 354, 83, 23);
+		frame.getContentPane().add(browse);
+		browse.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent browseHit) {
+				fileVisual.setVisible(true);
+			}
+		});
+		
+		JLabel lblExcelFileLocation = new JLabel("Excel File Location");
+		lblExcelFileLocation.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lblExcelFileLocation.setBounds(25, 358, 154, 18);
+		frame.getContentPane().add(lblExcelFileLocation);
+		
+		JButton collectData = new JButton("Collect Data");
+		collectData.setBounds(25, 397, 207, 28);
+		frame.getContentPane().add(collectData);
+		collectData.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent collectHit) {
+				Controller controller = new Controller();
+				controller.mainProgram();
+				setFieldData(controller.getInputData());
+				
+			}
+		});
+		
+		
 	}
 	
-	public void setFrameHiden ()
+	public void setFrameHidden ()
 	{
 		frame.setVisible(false);
 	}
@@ -322,5 +418,22 @@ public class DataView {
 		rankChangeLive.setText(windowData[22]);
 		rankLive.setText(windowData[23]);
 	}
-
+	public JButton getSubmitButton()
+	{
+		return(submit);
+	}
+	public String getFileLocation()
+	{
+		return(fileLocation.toString());
+	}
+	
+	public JButton getCollectButton()
+	{
+		return(collectData);
+	}
+	
+	public JButton getBrowseButton()
+	{		
+		return(browse);
+	}
 }
